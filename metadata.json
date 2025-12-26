@@ -1,0 +1,5 @@
+{
+  "name": "LinkedIn Job Application Copilot",
+  "description": "An AI-powered assistant to help you tailor your resume and cover letter for specific job applications on LinkedIn. Paste a job description and your profile information to get customized application materials.",
+  "requestFramePermissions": []
+}
