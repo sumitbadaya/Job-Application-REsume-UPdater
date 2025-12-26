@@ -20,9 +20,23 @@ export interface SkillGapAnalysis {
   suggestions: string[];
 }
 
+export interface ProjectExample {
+  title: string;
+  scenario: string;
+  context: string;
+  originalDesign: string;
+  problem: string;
+  solution: string;
+  result: string;
+}
+
 export interface AiAnalysisResult {
   tailoredResumePoints: string[];
-  coverLetter: string;
-  keywords: string[];
+  projectExample: ProjectExample;
+  keywords: string;
   skillGapAnalysis: SkillGapAnalysis;
+  coverLetter: string;
 }
+
+// New type for the on-demand project
+export type OnDemandProject = ProjectExample;

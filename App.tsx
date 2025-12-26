@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { UserProfile, JobDetails, AiAnalysisResult } from './types';
-import { generateApplicationMaterials } from './services/geminiService';
+import { UserProfile, JobDetails, AiAnalysisResult, OnDemandProject } from './types';
+import { generateApplicationMaterials, generateOnDemandProject } from './services/geminiService';
 import UserProfileForm from './components/UserProfileForm';
 import JobInputForm from './components/JobInputForm';
 import AiAnalysisDisplay from './components/AiAnalysisDisplay';
 import Header from './components/Header';
 import Loader from './components/Loader';
+import OnDemandProjectGenerator from './components/OnDemandProjectGenerator';
 
 function App() {
   const [userProfile, setUserProfile] = useState<UserProfile>({
@@ -37,6 +38,11 @@ Requirements:
   const [analysisResult, setAnalysisResult] = useState<AiAnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const [onDemandProject, setOnDemandProject] = useState<OnDemandProject | null>(null);
+  const [isProjectLoading, setIsProjectLoading] = useState<boolean>(false);
+  const [projectError, setProjectError] = useState<string | null>(null);
+
 
   const handleGenerate = async () => {
     setIsLoading(true);
@@ -50,6 +56,21 @@ Requirements:
       console.error(err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGenerateProject = async (resumePoint: string) => {
+    setIsProjectLoading(true);
+    setProjectError(null);
+    setOnDemandProject(null);
+    try {
+      const result = await generateOnDemandProject(resumePoint);
+      setOnDemandProject(result);
+    } catch (err) {
+      setProjectError('Failed to generate project example. Please try again.');
+      console.error(err);
+    } finally {
+      setIsProjectLoading(false);
     }
   };
   
@@ -80,6 +101,13 @@ Requirements:
               {isLoading && <Loader />}
               {error && <div className="bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-lg">{error}</div>}
               {analysisResult && <AiAnalysisDisplay result={analysisResult} />}
+
+              <OnDemandProjectGenerator
+                onGenerate={handleGenerateProject}
+                isLoading={isProjectLoading}
+                project={onDemandProject}
+                error={projectError}
+              />
             </div>
           </div>
 
